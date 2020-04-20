@@ -52,3 +52,8 @@ target_link_libraries(vkRenderer
     PRIVATE glad
     PRIVATE glfw
 )
+
+target_compile_definitions(vkRenderer
+    PRIVATE DEBUG
+    PRIVATE GLFW_INCLUDE_NONE
+)

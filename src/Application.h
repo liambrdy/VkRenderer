@@ -32,6 +32,8 @@ public:
     Application(uint32_t width, uint32_t height);
     virtual ~Application();
 
+    void SetFramebufferResized(bool resized) { m_framebufferResized = resized; }
+
     void Run();
 private:
     void InitVulkan();
@@ -60,6 +62,8 @@ private:
     VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
     VkPresentModeKHR ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
     VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+    void RecreateSwapChain();
+    void CleanupSwapChain();
 
     VkShaderModule CreateShaderModule(const std::vector<char>& src);
 
@@ -68,6 +72,7 @@ private:
 private:
     GLFWwindow* m_window;
     uint32_t m_width, m_height;
+    bool m_framebufferResized = false;
 
     const std::vector<const char*> m_validationLayers = {
         "VK_LAYER_KHRONOS_validation"
