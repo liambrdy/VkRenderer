@@ -88,6 +88,7 @@ private:
     void CreateFramebuffers();
     void CreateCommandPool();
     void CreateVertexBuffer();
+    void CreateIndexBuffer();
     void CreateCommandBuffers();
     void CreateSyncObjects();
 
@@ -101,6 +102,10 @@ private:
     void RecreateSwapChain();
     void CleanupSwapChain();
     uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+    void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+    void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+    VkCommandBuffer BeginSingleTimeCommands();
+    void EndSingleTimeCommands(VkCommandBuffer commandBuffer);
 
     VkShaderModule CreateShaderModule(const std::vector<char>& src);
 
@@ -120,9 +125,14 @@ private:
     };
 
     const std::vector<Vertex> m_vertices = {
-        {{ 0.0f, -0.5f }, { 1.0f, 1.0f, 1.0f }},
-        {{ 0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f }},
-        {{ -0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f }}
+        {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+        {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+        {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+        {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+    };
+
+    const std::vector<uint16_t> m_indices = {
+        0, 1, 2, 2, 3, 0
     };
 
     VkInstance m_instance;
@@ -143,6 +153,8 @@ private:
 
     VkBuffer m_vertexBuffer;
     VkDeviceMemory m_vertexBufferMemory;
+    VkBuffer m_indexBuffer;
+    VkDeviceMemory m_indexBufferMemory;
 
     VkSwapchainKHR m_swapChain;
     std::vector<VkImage> m_swapChainImages;
@@ -151,6 +163,6 @@ private:
     VkFormat m_swapChainImageFormat;
     VkExtent2D m_swapChainExtent;
 
-    QueueFamilyIndices m_indices;
+    QueueFamilyIndices m_queueIndices;
     SwapChainSupportDetail m_details;
 };
