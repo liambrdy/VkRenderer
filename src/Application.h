@@ -3,9 +3,12 @@
 #include <glad/vulkan.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+
 #include <vector>
 #include <string>
 #include <optional>
+#include <array>
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -24,6 +27,38 @@ struct SwapChainSupportDetail
     VkSurfaceCapabilitiesKHR capabilities;
     std::vector<VkSurfaceFormatKHR> formats;
     std::vector<VkPresentModeKHR> presentModes;
+};
+
+struct Vertex
+{
+    glm::vec2 position;
+    glm::vec3 color;
+
+    static VkVertexInputBindingDescription GetBindingDescription()
+    {
+        VkVertexInputBindingDescription description = {};
+        description.binding = 0;
+        description.stride = sizeof(Vertex);
+        description.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+        return description;
+    }
+
+    static std::array<VkVertexInputAttributeDescription, 2> GetAttributeDescriptions()
+    {
+        std::array<VkVertexInputAttributeDescription, 2> descriptions = {};
+        descriptions[0].binding = 0;
+        descriptions[0].location = 0;
+        descriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+        descriptions[0].offset = offsetof(Vertex, position);
+
+        descriptions[1].binding = 0;
+        descriptions[1].location = 1;
+        descriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+        descriptions[1].offset = offsetof(Vertex, color);
+
+        return descriptions;
+    } 
 };
 
 class Application
@@ -52,6 +87,7 @@ private:
     void CreateGraphicsPipeline();
     void CreateFramebuffers();
     void CreateCommandPool();
+    void CreateVertexBuffer();
     void CreateCommandBuffers();
     void CreateSyncObjects();
 
@@ -64,6 +100,7 @@ private:
     VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
     void RecreateSwapChain();
     void CleanupSwapChain();
+    uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
     VkShaderModule CreateShaderModule(const std::vector<char>& src);
 
@@ -82,6 +119,12 @@ private:
         VK_KHR_SWAPCHAIN_EXTENSION_NAME
     };
 
+    const std::vector<Vertex> m_vertices = {
+        {{ 0.0f, -0.5f }, { 1.0f, 1.0f, 1.0f }},
+        {{ 0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f }},
+        {{ -0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f }}
+    };
+
     VkInstance m_instance;
     VkDebugUtilsMessengerEXT m_debugMessenger;
     VkSurfaceKHR m_surface;
@@ -97,6 +140,9 @@ private:
     std::vector<VkFence> m_inFlightFences;
     std::vector<VkFence> m_imagesInFlight;
     uint32_t m_currentFrame = 0;
+
+    VkBuffer m_vertexBuffer;
+    VkDeviceMemory m_vertexBufferMemory;
 
     VkSwapchainKHR m_swapChain;
     std::vector<VkImage> m_swapChainImages;

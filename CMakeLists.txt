@@ -46,6 +46,7 @@ set_target_properties(vkRenderer
 target_include_directories(vkRenderer
     PRIVATE ${THIRDPARTY_DIR}/glad/include
     PRIVATE ${THIRDPARTY_DIR}/glfw/include
+    PRIVATE ${THIRDPARTY_DIR}/glm
 )
 
 target_link_libraries(vkRenderer
