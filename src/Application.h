@@ -32,7 +32,7 @@ struct SwapChainSupportDetail
 struct Vertex
 {
     glm::vec2 position;
-    glm::vec3 color;
+    glm::vec4 color;
 
     static VkVertexInputBindingDescription GetBindingDescription()
     {
@@ -54,7 +54,7 @@ struct Vertex
 
         descriptions[1].binding = 0;
         descriptions[1].location = 1;
-        descriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+        descriptions[1].format = VK_FORMAT_R32G32B32A32_SFLOAT;
         descriptions[1].offset = offsetof(Vertex, color);
 
         return descriptions;
@@ -125,10 +125,10 @@ private:
     };
 
     const std::vector<Vertex> m_vertices = {
-        {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-        {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-        {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-        {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+        {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f, 0.1f}},
+        {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f, 0.1f}},
+        {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f, 0.1f}},
+        {{-0.5f, 0.5f}, {0.5f, 0.2f, 0.6f, 0.1f}}
     };
 
     const std::vector<uint16_t> m_indices = {

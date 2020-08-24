@@ -297,6 +297,8 @@ void Application::CreateLogicalDevice()
     }
 
     VkPhysicalDeviceFeatures deviceFeatures = {};
+    deviceFeatures.fillModeNonSolid = VK_TRUE;
+    deviceFeatures.logicOp = VK_TRUE;
 
     VkDeviceCreateInfo deviceCreateInfo = {};
     deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -306,6 +308,7 @@ void Application::CreateLogicalDevice()
     deviceCreateInfo.pQueueCreateInfos = queueCreateInfos.data();
     deviceCreateInfo.enabledExtensionCount = static_cast<uint32_t>(m_deviceExtensions.size());
     deviceCreateInfo.ppEnabledExtensionNames = m_deviceExtensions.data();
+    deviceCreateInfo.pEnabledFeatures = &deviceFeatures;
 #ifdef DEBUG
     deviceCreateInfo.enabledLayerCount = static_cast<uint32_t>(m_validationLayers.size());
     deviceCreateInfo.ppEnabledLayerNames = m_validationLayers.data();
@@ -500,7 +503,7 @@ void Application::CreateGraphicsPipeline()
     viewport.maxDepth = 1.0f;
 
     VkRect2D scissor = {};
-    scissor.extent = { 0, 0 };
+    scissor.offset = { 0, 0 };
     scissor.extent = m_swapChainExtent;
 
     VkPipelineViewportStateCreateInfo viewportState = {};
@@ -540,9 +543,9 @@ void Application::CreateGraphicsPipeline()
 
     VkPipelineColorBlendAttachmentState colorBlendAttachment = {};
     colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-    colorBlendAttachment.blendEnable = VK_FALSE;
-    colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
-    colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO;
+    colorBlendAttachment.blendEnable = VK_TRUE;
+    colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+    colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
     colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
     colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
     colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
